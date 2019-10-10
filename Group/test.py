@@ -362,3 +362,45 @@
 # last_month = last_month.strftime("%b")
 
 # print(last_month)
+
+# import re
+# import json
+# import gspread
+# import datetime
+# import requests
+
+# from pprint import pprint
+# from get_median_occ import median_occupancy
+# from oauth2client.service_account import ServiceAccountCredentials
+# from dates import tomorrows_date, tomorrows_date_month, day_after_tomorrows_date, day_after_tomorrows_month, two_days_after_tomorrows_date, two_days_after_tomorrows_month
+
+# scope = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/auth/spreadsheets',"https://www.googleapis.com/auth/drive.file","https://www.googleapis.com/auth/drive"]
+# creds = ServiceAccountCredentials.from_json_keyfile_name("cred.json", scope)
+# client = gspread.authorize(creds)
+# sheet = client.open("(2019) GROUP OCCUPANCY")
+
+# for i in sheet:
+
+#     i_str = str(i)
+#     sheet_month = re.findall(r"'(.*?)'", i_str)
+#     sheet_month = sheet_month[0]
+#     sheet_month = sheet_month[:3]
+    
+
+#     if str(sheet_month).strip() == str(tomorrows_date_month).strip() and str(sheet_month).strip() == str(day_after_tomorrows_month).strip() and str(sheet_month).strip() == str(two_days_after_tomorrows_month).strip():
+#         print(sheet_month)
+#         print("---")
+
+#         for j in range(4, 35):
+
+#             sheet_date = i.cell(j, 1)
+#             sheet_date = str(sheet_date)
+#             sheet_date = re.findall(r"'(.*?)'", sheet_date)
+#             sheet_date = sheet_date[0]
+#             print(sheet_date)
+
+#         break
+# import time
+# t = time.localtime()
+# current_time = time.strftime("%H:%M", t)
+# print(current_time)

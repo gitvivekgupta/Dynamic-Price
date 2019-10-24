@@ -1,17 +1,17 @@
+
 import json
 import gspread
-import datetime
 import requests
 
+from datetime import datetime
 from pprint import pprint
+from golf_property import golf_final_list
+from arbor_property import arbor_final_list
+from cyber_property import cyber_final_list
 from get_median_occ import median_occupancy
 from oauth2client.service_account import ServiceAccountCredentials
+from dates import todays_date_month, tomorrows_date_month, day_after_tomorrows_month, todays_date
 from compute_save import _save_compute_, _save_compute_one_, _save_compute_two_, _save_compute_three_, _save_compute_four_
-from dates import todays_date_month, tomorrows_date_month, day_after_tomorrows_month
-
-from arbor_property import arbor_final_list
-from golf_property import golf_final_list
-from cyber_property import cyber_final_list
 
 def _get_last_month_():
 
@@ -138,14 +138,24 @@ if __name__== "__main__":
     main()
 
     price_list = []
+    push_data = {}
 
     for (a, b, c) in zip(arbor_final_list, golf_final_list, cyber_final_list): 
         price_list.append(a)
         price_list.append(b)
         price_list.append(c)
 
-    for item in price_list:
-        send_perch_price_here = "https://api.nodal.direct/v1/index.php/Api/PerchDynamicPricePost"
-        requests.post(url = send_perch_price_here, data = item)
+    push_data['push_date'] = todays_date
+
+    now = datetime.now()
+    current_time = now.strftime("%H:%M:%S")
+
+    push_data['push_time'] = current_time
+    push_data['data'] = price_list
+
+    push_data_json = json.dumps(push_data)
+
+    send_perch_price_here = "https://api.nodal.direct/v1/index.php/Api/PerchDynamicPricePost"
+    data_sent = requests.post(url = send_perch_price_here, data = push_data_json)
     
-    print("success")
+    print(data_sent)

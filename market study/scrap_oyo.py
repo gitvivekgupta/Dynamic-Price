@@ -19,25 +19,25 @@ data_dict["dlf_phase_1"] = {}
 data_dict["dlf_cyber_city"] = {}
 data_dict["huda_city_center"] = {}
 
-#phase1 = 1700 - 2800
-#cc = 1800 - 2200
-#huda = 1400 - 2500
+#phase1 = 1700-2000 => 2800-3000 => 2800-3200 => range(26-3700)
+#cc = 1800-2500 => 2000-2400 => range(1900- 2500)
+#huda = 2000-3000 => 2700-3000 => range(26-3800)
 
 def scrap_oyo(all_data = {}):
-    
-    url_list = ['https://www.oyorooms.com/search?checkin=16%2F09%2F2019&checkout=17%2F09%2F2019&country=india&coupon=&filters%5Bcoordinates%5D%5Blatitude%5D=28.471981&filters%5Bcoordinates%5D%5Blongitude%5D=77.104735&filters%5Broom_pricing%5D%5Bmax%5D=2878&filters%5Broom_pricing%5D%5Bmin%5D=1756&guests=2&latitude=28.471981&location=DLF+Phase+1%2C+Gurgaon%2C+Haryana&longitude=77.104735&roomConfig%5B%5D=2&rooms=1&searchType=locality&showSearchElements=false',
-                'https://www.oyorooms.com/search?checkin=16%2F09%2F2019&checkout=17%2F09%2F2019&country=india&coupon=&filters%5Bcoordinates%5D%5Blatitude%5D=28.4949762&filters%5Bcoordinates%5D%5Blongitude%5D=77.0895421&filters%5Broom_pricing%5D%5Bmax%5D=2268&filters%5Broom_pricing%5D%5Bmin%5D=1841&guests=2&latitude=28.4949762&location=Dlf+Cyber+City%2C+Gurugram%2C+Haryana&longitude=77.0895421&roomConfig%5B%5D=2&rooms=1&searchType=locality&showSearchElements=false',
-                'https://www.oyorooms.com/search?checkin=16%2F09%2F2019&checkout=17%2F09%2F2019&country=india&coupon=&filters%5Bcoordinates%5D%5Blatitude%5D=28.45911&filters%5Bcoordinates%5D%5Blongitude%5D=77.07255&filters%5Broom_pricing%5D%5Bmax%5D=2592&filters%5Broom_pricing%5D%5Bmin%5D=1480&guests=2&latitude=28.45911&location=Huda+City+Center+Metro%2C+Gurugram%2C+Haryana&longitude=77.07255&roomConfig%5B%5D=2&rooms=1&searchType=locality&showSearchElements=false'
+
+    url_list = ['https://www.oyorooms.com/search?checkin=24%2F10%2F2019&checkout=25%2F10%2F2019&country=india&coupon=&filters%5Bcoordinates%5D%5Blatitude%5D=28.471981&filters%5Bcoordinates%5D%5Blongitude%5D=77.104735&filters%5Broom_pricing%5D%5Bmax%5D=3718&filters%5Broom_pricing%5D%5Bmin%5D=2526&guests=1&latitude=28.471981&location=DLF+Phase+1%2C+Gurgaon%2C+Haryana&longitude=77.104735&roomConfig%5B%5D=1&rooms=1&searchType=locality',
+                'https://www.oyorooms.com/search?checkin=24%2F10%2F2019&checkout=25%2F10%2F2019&country=india&coupon=&filters%5Bcoordinates%5D%5Blatitude%5D=28.4949762&filters%5Bcoordinates%5D%5Blongitude%5D=77.0895421&filters%5Broom_pricing%5D%5Bmax%5D=2506&filters%5Broom_pricing%5D%5Bmin%5D=1890&guests=1&latitude=28.4949762&location=Dlf+Cyber+City%2C+Gurugram%2C+Haryana&longitude=77.0895421&roomConfig%5B%5D=1&rooms=1&searchType=locality',
+                'https://www.oyorooms.com/search?checkin=24%2F10%2F2019&checkout=25%2F10%2F2019&filters%5Bcoordinates%5D%5Blatitude%5D=28.4592693&filters%5Bcoordinates%5D%5Blongitude%5D=77.07241920000001&filters%5Broom_pricing%5D%5Bmax%5D=3817&filters%5Broom_pricing%5D%5Bmin%5D=2486&guests=1&latitude=28.4592693&location=Huda+Metro+Station%2C+Gurugram%2C+Delhi+122007&longitude=77.07241920000001&roomConfig%5B%5D=1&rooms=1&searchType=locality'
                 ]
 
     combined_list = []
-    filename = 'hotel.csv'
-    column_header = ['Name', 'Price', 'Region', 'Date'] 
+    filename = 'hotel.csv'  
+    # column_header = ['Name', 'Price', 'Region', 'Date', 'min_price', 'max_price'] 
 
-    with open(filename, 'w') as write_file:
-        writer = csv.writer(write_file)
-        writer.writerow(column_header)
-    write_file.close()
+    # with open(filename, 'w') as write_file:
+    #     writer = csv.writer(write_file)
+    #     writer.writerow(column_header)
+    # write_file.close()
 
     for url in url_list:
 
@@ -48,6 +48,7 @@ def scrap_oyo(all_data = {}):
         price = [a.get_text() for a in soup.find_all('span', {"class": "listingPrice__finalPrice"})]
         region = [a.get_text() for a in soup.find_all('h1', {"class": "ListingContentHeader__h1"})]
         date = [a.get_text() for a in soup.find_all('span', {"class": "headerDatePicker__date u-textEllipsis"})]
+        price_range = [a.get_text() for a in soup.find_all('span', {"class": "input-range__label-container"})]
 
         with open(filename, 'a') as write_file:
 
@@ -60,6 +61,8 @@ def scrap_oyo(all_data = {}):
                 combined_list.append(b)
                 combined_list.append(region[0])
                 combined_list.append(date[0])
+                combined_list.append(price_range[1])
+                combined_list.append(price_range[2])
 
                 writer.writerow(combined_list)
                 combined_list = []
@@ -72,9 +75,9 @@ def scrap_oyo(all_data = {}):
 
         location = str(df['Region'][i])
 
-        found_dlf = location.find('DLFPhase1')
-        found_cyber = location.find('CyberCity')
-        found_huda = location.find('HudaCity')
+        found_dlf = location.find('Phase')
+        found_cyber = location.find('Cyber')
+        found_huda = location.find('Huda')
 
 
         if found_dlf != -1:
@@ -92,6 +95,10 @@ def scrap_oyo(all_data = {}):
 
         else:
             pass
+    
+    # print(dlf_data)
+    # print(cyber_data)
+    # print(huda_data)
 
     data_dict["dlf_phase_1"]["avg_price"] = compute_dlf_avg(dlf_data)
     dlf_median = compute_dlf_median(dlf_data)

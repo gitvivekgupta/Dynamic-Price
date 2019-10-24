@@ -1,6 +1,6 @@
 import time
 import json
-
+from dates import todays_date
 from surge_price import get_surge_price
 from base_price import set_base_arbor_price
 from data import arbor_suites_total_rooms, perch_arbor_property_name
@@ -13,10 +13,6 @@ def _perch_arbor_suites_(i, j, arbor_surge_index, forecast_date):
         arbor_data_dict["property_name"] = str(perch_arbor_property_name)
         arbor_data_dict["date"] = forecast_date
 
-        t = time.localtime()
-        current_time = time.strftime("%H:%M", t)
-        arbor_data_dict["time"] = current_time
-
         total_avail_rooms = i.cell(j, 5).value
         arbor_suites_current_occ_percentage = 100 - ((int(total_avail_rooms)/int(arbor_suites_total_rooms)) * 100)
         arbor_suites_current_occ_percentage = round(arbor_suites_current_occ_percentage, 2)
@@ -28,8 +24,5 @@ def _perch_arbor_suites_(i, j, arbor_surge_index, forecast_date):
         else:
                 arbor_data_dict = set_base_arbor_price(arbor_data_dict)
 
-        arbor_data_json = json.dumps(arbor_data_dict)
-        arbor_final_list.append(arbor_data_json)
-
-        # print(arbor_data_json)
+        arbor_final_list.append(arbor_data_dict)
         
